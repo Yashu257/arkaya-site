@@ -148,7 +148,7 @@ export function CaseStudyGrid({ cards }: { cards: CardDef[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
         {cards.map((c) => (
           <CaseStudyCard key={c.title} {...c} onActiveChange={setActive} />
         ))}
@@ -205,7 +205,12 @@ function CaseStudyCard({
       ref={cardRef}
       data-orb-hover
       onClick={() => setFlipped((v) => !v)}
-      className="group relative h-[300px] sm:h-[380px] md:h-[460px] rounded-2xl overflow-hidden panel-glass cursor-none"
+      className="group relative w-full rounded-2xl overflow-hidden panel-glass cursor-none"
+      style={{
+        aspectRatio: "3 / 4",
+        minHeight: "220px",
+        maxHeight: "460px",
+      }}
     >
       {/* blurred screenshot background — always visible */}
       <div
@@ -232,11 +237,11 @@ function CaseStudyCard({
         />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-6 z-10 pointer-events-none bg-gradient-to-t from-background via-background/85 to-transparent">
-        <div className="label-mono text-ember mb-2">{tag}</div>
-        <h3 className="text-2xl font-bold mb-1">{title}</h3>
-        <p className="text-sm text-muted-foreground">
-          {flipped ? desc : "Click to reveal →"}
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6 z-10 pointer-events-none bg-gradient-to-t from-background via-background/85 to-transparent">
+        <div className="label-mono text-ember mb-1">{tag}</div>
+        <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 leading-tight">{title}</h3>
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+          {flipped ? desc : "Tap to reveal →"}
         </p>
       </div>
     </div>

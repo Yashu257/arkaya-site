@@ -196,7 +196,7 @@ function Index() {
             <span className="text-ember text-glow-ember">live in the future.</span>
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           <ServiceCard image={svcAi} icon="◈" title="AI Agent Development" desc="Autonomous agents that think, act, and integrate across your stack — built on the latest LLM frameworks." accent="#e84c1e" />
           <ServiceCard image={svcWeb} icon="▣" title="Website Design & Dev" desc="Cinematic, conversion-optimized websites with motion, 3D, and ruthless attention to detail." accent="#2a6a4a" />
           <ServiceCard image={svcMobile} icon="◐" title="Mobile APK Development" desc="Native-feel Android APKs and cross-platform mobile experiences shipped fast and beautifully." accent="#e84c1e" />

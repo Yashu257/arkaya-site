@@ -47,28 +47,44 @@ export function ServiceCard({
   return (
     <div
       data-orb-hover
-      className="group relative h-[320px] sm:h-[400px] md:h-[460px] panel-glass rounded-2xl overflow-hidden transition-all duration-500"
+      className="group relative w-full panel-glass rounded-2xl overflow-hidden transition-all duration-500"
       style={{
-        boxShadow: hovered ? `0 0 60px ${accent}80, inset 0 0 40px ${accent}30` : `0 0 20px ${accent}20`,
+        // aspect-ratio drives height — 3:4 on mobile, taller on desktop via min-height
+        aspectRatio: "3 / 4",
+        minHeight: "220px",
+        maxHeight: "460px",
+        boxShadow: hovered
+          ? `0 0 60px ${accent}80, inset 0 0 40px ${accent}30`
+          : `0 0 20px ${accent}20`,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* background image */}
       <img
         src={image}
         alt={title}
         loading="lazy"
-        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${hovered ? "scale-110 opacity-90" : "scale-100 opacity-70"}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+          hovered ? "scale-110 opacity-90" : "scale-100 opacity-70"
+        }`}
       />
+      {/* gradient overlay */}
       <div
         className="absolute inset-0 transition-opacity duration-500"
         style={{
           background: `linear-gradient(180deg, transparent 0%, ${accent}20 40%, var(--background) 95%)`,
         }}
       />
+      {/* 3D card mesh */}
       <div className="absolute inset-0 opacity-60 mix-blend-screen pointer-events-none">
         <ClientOnly>
-          <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 1.5]}>
+          <Canvas
+            camera={{ position: [0, 0, 5], fov: 45 }}
+            dpr={[1, 1.5]}
+            style={{ width: "100%", height: "100%" }}
+            events={() => ({ connect: () => {}, disconnect: () => {} })}
+          >
             <ambientLight intensity={0.3} />
             <pointLight position={[3, 3, 3]} intensity={2} color={accent} />
             <pointLight position={[-3, -2, 2]} intensity={1} color="#1a3a2a" />
@@ -76,12 +92,17 @@ export function ServiceCard({
           </Canvas>
         </ClientOnly>
       </div>
-      <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-7 pointer-events-none">
+      {/* text content */}
+      <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-5 md:p-7 pointer-events-none">
         <div className="text-3xl sm:text-4xl md:text-5xl text-glow-ember">{icon}</div>
         <div>
-          <div className="label-mono text-ember mb-2">// service</div>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold leading-none mb-2">{title}</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{desc}</p>
+          <div className="label-mono text-ember mb-1 sm:mb-2">// service</div>
+          <h3 className="text-lg sm:text-xl md:text-3xl font-bold leading-tight mb-1 sm:mb-2">
+            {title}
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-none">
+            {desc}
+          </p>
         </div>
       </div>
     </div>
