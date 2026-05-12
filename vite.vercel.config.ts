@@ -23,6 +23,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // base is set to /arkaya-site/ for GitHub Pages
+  // For local dev or Vercel (custom domain), set base: "/"
+  base: process.env.GITHUB_PAGES ? "/arkaya-site/" : "/",
   build: {
     outDir: "dist",
     emptyOutDir: true,
