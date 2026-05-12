@@ -1,0 +1,148 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ember: var(--ember);
+  --color-emerald-glow: var(--emerald-glow);
+  --font-display: "Bebas Neue", "Oswald", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.07 0.005 270);
+  --foreground: oklch(0.97 0.01 90);
+  --card: oklch(0.1 0.008 270);
+  --card-foreground: oklch(0.97 0.01 90);
+  --popover: oklch(0.1 0.008 270);
+  --popover-foreground: oklch(0.97 0.01 90);
+  --primary: oklch(0.68 0.21 38);
+  --primary-foreground: oklch(0.07 0.005 270);
+  --secondary: oklch(0.35 0.07 155);
+  --secondary-foreground: oklch(0.97 0.01 90);
+  --muted: oklch(0.15 0.01 270);
+  --muted-foreground: oklch(0.65 0.02 90);
+  --accent: oklch(0.45 0.1 155);
+  --accent-foreground: oklch(0.97 0.01 90);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.97 0.01 90);
+  --border: oklch(0.2 0.015 270 / 60%);
+  --input: oklch(0.18 0.012 270);
+  --ring: oklch(0.68 0.21 38);
+  --ember: oklch(0.68 0.21 38);
+  --emerald-glow: oklch(0.55 0.13 155);
+  --shadow-ember: 0 0 40px color-mix(in oklab, var(--ember) 60%, transparent);
+  --shadow-emerald: 0 0 30px color-mix(in oklab, var(--emerald-glow) 50%, transparent);
+}
+
+.dark {
+  --background: oklch(0.07 0.005 270);
+  --foreground: oklch(0.97 0.01 90);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    cursor: none;
+  }
+  body {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+  .label-mono {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+  }
+}
+
+@layer utilities {
+  .text-ember { color: var(--ember); }
+  .bg-ember { background-color: var(--ember); }
+  .border-ember { border-color: var(--ember); }
+  .text-emerald-glow { color: var(--emerald-glow); }
+  .bg-emerald-glow { background-color: var(--emerald-glow); }
+  .glow-ember { box-shadow: var(--shadow-ember); }
+  .glow-emerald { box-shadow: var(--shadow-emerald); }
+  .text-glow-ember { text-shadow: 0 0 24px color-mix(in oklab, var(--ember) 70%, transparent); }
+  .text-glow-emerald { text-shadow: 0 0 24px color-mix(in oklab, var(--emerald-glow) 70%, transparent); }
+  .gradient-ember {
+    background: linear-gradient(135deg, var(--ember), oklch(0.5 0.18 25));
+  }
+  .panel-glass {
+    background: linear-gradient(160deg, color-mix(in oklab, var(--ember) 6%, transparent), color-mix(in oklab, var(--emerald-glow) 4%, transparent));
+    backdrop-filter: blur(14px);
+    border: 1px solid color-mix(in oklab, var(--ember) 25%, transparent);
+  }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float-y 6s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+/* Hero content fades in immediately on first paint — no JS dependency */
+@keyframes hero-fade-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-fade-in {
+  animation: hero-fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-fade-in-delay-1 {
+  animation: hero-fade-in 0.7s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-fade-in-delay-2 {
+  animation: hero-fade-in 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Canvas wrapper fades in once mounted — prevents black flash */
+@keyframes canvas-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.canvas-fade-in {
+  animation: canvas-fade-in 0.5s ease-out both;
+}
