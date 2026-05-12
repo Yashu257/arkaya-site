@@ -71,9 +71,9 @@ function HeroHeadline() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
   return (
-    <div ref={ref} className="transition-transform duration-100 ease-out will-change-transform">
+    <div ref={ref} className="transition-transform duration-100 ease-out will-change-transform w-full px-2">
       <h1
-        className="font-display text-[clamp(3.5rem,12vw,11rem)] leading-[0.85] font-bold text-center"
+        className="font-display text-[clamp(2.4rem,10vw,11rem)] leading-[0.88] font-bold text-center"
         style={{
           background: "linear-gradient(180deg, #fff 0%, #fff 40%, color-mix(in oklab, var(--ember) 80%, #fff) 100%)",
           WebkitBackgroundClip: "text",
@@ -92,9 +92,6 @@ function HeroHeadline() {
   );
 }
 
-// useLayoutEffect fires synchronously after DOM mutations, before the browser
-// paints — so components gated by this appear on the very first visible frame.
-// We alias it to useEffect on the server to avoid SSR warnings.
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
@@ -105,48 +102,85 @@ function Mounted({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// Mobile hamburger nav
+function MobileNav() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        className="md:hidden flex flex-col gap-1.5 p-2 z-50"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Toggle menu"
+      >
+        <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${open ? "rotate-45 translate-y-2" : ""}`} />
+        <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${open ? "opacity-0" : ""}`} />
+        <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg flex flex-col items-center justify-center gap-10 md:hidden">
+          {["services", "work", "team", "contact"].map((s) => (
+            <a
+              key={s}
+              href={`#${s}`}
+              onClick={() => setOpen(false)}
+              className="font-display text-5xl tracking-widest hover:text-ember transition"
+            >
+              {s.toUpperCase()}
+            </a>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 function Index() {
   const scrollRef = useScrollProgress();
 
   return (
-    <div className="relative bg-background text-foreground">
+    <div className="relative bg-background text-foreground overflow-x-hidden">
       <Mounted>
         <CursorOrb />
       </Mounted>
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-6 flex justify-between items-center mix-blend-difference">
-        <div className="font-display text-2xl tracking-widest">ARKAYA</div>
+      <nav className="fixed top-0 left-0 right-0 z-50 px-5 md:px-8 py-4 md:py-6 flex justify-between items-center mix-blend-difference">
+        <div className="font-display text-xl md:text-2xl tracking-widest">ARKAYA</div>
+        {/* Desktop links */}
         <div className="hidden md:flex gap-10 label-mono">
           <a data-orb-hover href="#services" className="hover:text-ember transition">Services</a>
           <a data-orb-hover href="#work" className="hover:text-ember transition">Work</a>
           <a data-orb-hover href="#team" className="hover:text-ember transition">Team</a>
           <a data-orb-hover href="#contact" className="hover:text-ember transition">Contact</a>
         </div>
+        {/* Mobile hamburger */}
+        <MobileNav />
       </nav>
 
-      {/* HERO */}
-      <section className="relative h-screen w-full overflow-hidden">
+      {/* HERO — use 100dvh so mobile browser chrome doesn't cause overflow */}
+      <section className="relative h-[100dvh] min-h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0 canvas-fade-in">
           <Mounted>
             <HeroScene scrollRef={scrollRef} />
           </Mounted>
         </div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6">
-          <div className="label-mono text-ember mb-8 animate-pulse-glow hero-fade-in">// arkaya — creative digital studio</div>
-          <div className="hero-fade-in-delay-1">
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4 sm:px-6">
+          <div className="label-mono text-ember mb-4 md:mb-8 animate-pulse-glow hero-fade-in text-center">
+            // arkaya — creative digital studio
+          </div>
+          <div className="hero-fade-in-delay-1 w-full">
             <HeroHeadline />
           </div>
-          <div className="mt-10 label-mono text-foreground/80 text-glow-ember text-center hero-fade-in-delay-2">
+          <div className="mt-6 md:mt-10 label-mono text-foreground/80 text-glow-ember text-center hero-fade-in-delay-2 flex flex-wrap justify-center gap-x-2 gap-y-1">
             <span className="text-ember">AI Agents</span>
-            <span className="mx-3 text-muted-foreground">·</span>
+            <span className="text-muted-foreground">·</span>
             <span>Web</span>
-            <span className="mx-3 text-muted-foreground">·</span>
+            <span className="text-muted-foreground">·</span>
             <span>Mobile APKs</span>
-            <span className="mx-3 text-muted-foreground">·</span>
+            <span className="text-muted-foreground">·</span>
             <span className="text-emerald-glow">Automation Tools</span>
           </div>
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 label-mono text-muted-foreground animate-pulse-glow hero-fade-in-delay-2">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 label-mono text-muted-foreground animate-pulse-glow hero-fade-in-delay-2 whitespace-nowrap">
             scroll to enter ↓
           </div>
         </div>
@@ -154,15 +188,15 @@ function Index() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" className="relative py-32 px-6 md:px-12 max-w-7xl mx-auto">
-        <div className="mb-20">
-          <div className="label-mono text-ember mb-4">// 01 — what we build</div>
-          <h2 className="font-display text-6xl md:text-8xl font-bold leading-none">
+      <section id="services" className="relative py-16 md:py-32 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="mb-10 md:mb-20">
+          <div className="label-mono text-ember mb-3 md:mb-4">// 01 — what we build</div>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-none">
             Services that<br />
             <span className="text-ember text-glow-ember">live in the future.</span>
           </h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <ServiceCard image={svcAi} icon="◈" title="AI Agent Development" desc="Autonomous agents that think, act, and integrate across your stack — built on the latest LLM frameworks." accent="#e84c1e" />
           <ServiceCard image={svcWeb} icon="▣" title="Website Design & Dev" desc="Cinematic, conversion-optimized websites with motion, 3D, and ruthless attention to detail." accent="#2a6a4a" />
           <ServiceCard image={svcMobile} icon="◐" title="Mobile APK Development" desc="Native-feel Android APKs and cross-platform mobile experiences shipped fast and beautifully." accent="#e84c1e" />
@@ -171,10 +205,10 @@ function Index() {
       </section>
 
       {/* CASE STUDIES */}
-      <section id="work" className="relative py-32 px-6 md:px-12 max-w-7xl mx-auto">
-        <div className="mb-20">
-          <div className="label-mono text-ember mb-4">// 02 — selected work</div>
-          <h2 className="font-display text-6xl md:text-8xl font-bold leading-none">
+      <section id="work" className="relative py-16 md:py-32 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="mb-10 md:mb-20">
+          <div className="label-mono text-ember mb-3 md:mb-4">// 02 — selected work</div>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-none">
             Projects that<br />
             <span className="text-ember text-glow-ember">left a mark.</span>
           </h2>
@@ -190,10 +224,10 @@ function Index() {
       </section>
 
       {/* TEAM */}
-      <section id="team" className="relative py-32 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto mb-12">
-          <div className="label-mono text-ember mb-4">// 03 — the makers</div>
-          <h2 className="font-display text-6xl md:text-8xl font-bold leading-none">
+      <section id="team" className="relative py-16 md:py-32 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto mb-8 md:mb-12">
+          <div className="label-mono text-ember mb-3 md:mb-4">// 03 — the makers</div>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-none">
             Small team.<br />
             <span className="text-ember text-glow-ember">Outsized output.</span>
           </h2>
@@ -212,19 +246,19 @@ function Index() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="relative h-screen min-h-[600px] w-full overflow-hidden">
+      <section id="contact" className="relative min-h-[100dvh] w-full overflow-hidden">
         <div className="absolute inset-0 canvas-fade-in">
           <Mounted>
             <ContactScene />
           </Mounted>
         </div>
-        <div className="relative z-10 h-full flex items-center justify-center px-6">
+        <div className="relative z-10 min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 py-20">
           <div
-            className="panel-glass rounded-2xl p-7 md:p-9 max-w-md w-full animate-float"
+            className="panel-glass rounded-2xl p-5 sm:p-7 md:p-9 max-w-sm sm:max-w-md w-full animate-float"
             style={{ boxShadow: "0 0 60px color-mix(in oklab, var(--ember) 30%, transparent)" }}
           >
             <div className="label-mono text-ember mb-2">// 04 — start a project</div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold leading-none mb-5">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold leading-none mb-4 md:mb-5">
               Let's build<br />
               <span className="text-ember text-glow-ember">something unforgettable.</span>
             </h2>
@@ -272,7 +306,7 @@ function Index() {
               <button
                 data-orb-hover
                 type="submit"
-                className="w-full gradient-ember text-primary-foreground font-display tracking-widest text-lg py-3 rounded-lg glow-ember hover:scale-[1.02] transition-transform"
+                className="w-full gradient-ember text-primary-foreground font-display tracking-widest text-base md:text-lg py-3 rounded-lg glow-ember hover:scale-[1.02] transition-transform"
               >
                 TRANSMIT →
               </button>
@@ -281,7 +315,7 @@ function Index() {
         </div>
       </section>
 
-      <footer className="relative border-t border-border py-10 px-6 text-center label-mono text-muted-foreground">
+      <footer className="relative border-t border-border py-8 px-4 text-center label-mono text-muted-foreground text-xs">
         © {new Date().getFullYear()} ARKAYA · BUILT IN THE DARK
       </footer>
     </div>

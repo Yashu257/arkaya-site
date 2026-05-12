@@ -148,7 +148,7 @@ export function CaseStudyGrid({ cards }: { cards: CardDef[] }) {
 
   return (
     <>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {cards.map((c) => (
           <CaseStudyCard key={c.title} {...c} onActiveChange={setActive} />
         ))}
@@ -205,7 +205,7 @@ function CaseStudyCard({
       ref={cardRef}
       data-orb-hover
       onClick={() => setFlipped((v) => !v)}
-      className="group relative h-[460px] rounded-2xl overflow-hidden panel-glass cursor-none"
+      className="group relative h-[300px] sm:h-[380px] md:h-[460px] rounded-2xl overflow-hidden panel-glass cursor-none"
     >
       {/* blurred screenshot background — always visible */}
       <div

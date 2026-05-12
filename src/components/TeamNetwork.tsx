@@ -19,6 +19,14 @@ export function TeamNetwork({ members }: { members: Member[] }) {
   const [size, setSize] = useState({ w: 1000, h: 560 });
   const wrapRef = useRef<HTMLDivElement>(null);
   const [tick, setTick] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // measure
   useEffect(() => {
@@ -44,7 +52,11 @@ export function TeamNetwork({ members }: { members: Member[] }) {
 
   const cx = size.w / 2;
   const cy = size.h / 2;
-  const radius = Math.min(size.w, size.h) * 0.36;
+  const radius = Math.min(size.w, size.h) * (isMobile ? 0.32 : 0.36);
+
+  // Scale node sizes for mobile
+  const hubSize = isMobile ? 80 : 132;
+  const nodeSize = isMobile ? 58 : 96;
 
   // first member is hub, rest distributed evenly
   const others = members.slice(1);
@@ -90,7 +102,7 @@ export function TeamNetwork({ members }: { members: Member[] }) {
   }
 
   return (
-    <div ref={wrapRef} className="relative w-full h-[640px] md:h-[680px]">
+    <div ref={wrapRef} className="relative w-full h-[420px] sm:h-[560px] md:h-[680px]">
       {/* SVG synapses */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
@@ -162,7 +174,7 @@ export function TeamNetwork({ members }: { members: Member[] }) {
       {nodes.map((n, i) => {
         const isHover = hovered === i;
         const dim = hovered !== null && !isHover;
-        const sz = n.hub ? 132 : 96;
+        const sz = n.hub ? hubSize : nodeSize;
         return (
           <div
             key={n.m.initials}
@@ -183,7 +195,7 @@ export function TeamNetwork({ members }: { members: Member[] }) {
               style={{
                 width: sz,
                 height: sz,
-                fontSize: n.hub ? 36 : 28,
+                fontSize: n.hub ? (isMobile ? 22 : 36) : (isMobile ? 16 : 28),
                 color: "#fff",
                 background: `radial-gradient(circle at 30% 30%, ${
                   n.hub
@@ -227,11 +239,11 @@ export function TeamNetwork({ members }: { members: Member[] }) {
             >
               <div
                 className="font-bold leading-tight"
-                style={{ fontSize: n.hub ? 18 : 15 }}
+                style={{ fontSize: n.hub ? (isMobile ? 12 : 18) : (isMobile ? 10 : 15) }}
               >
                 {n.m.name}
               </div>
-              <div className="label-mono text-ember mt-1" style={{ fontSize: 11 }}>
+              <div className="label-mono text-ember mt-1" style={{ fontSize: isMobile ? 8 : 11 }}>
                 {n.m.role}
               </div>
             </div>

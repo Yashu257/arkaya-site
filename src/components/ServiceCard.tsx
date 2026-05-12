@@ -47,7 +47,7 @@ export function ServiceCard({
   return (
     <div
       data-orb-hover
-      className="group relative h-[460px] panel-glass rounded-2xl overflow-hidden transition-all duration-500"
+      className="group relative h-[320px] sm:h-[400px] md:h-[460px] panel-glass rounded-2xl overflow-hidden transition-all duration-500"
       style={{
         boxShadow: hovered ? `0 0 60px ${accent}80, inset 0 0 40px ${accent}30` : `0 0 20px ${accent}20`,
       }}
@@ -76,12 +76,12 @@ export function ServiceCard({
           </Canvas>
         </ClientOnly>
       </div>
-      <div className="relative z-10 h-full flex flex-col justify-between p-7 pointer-events-none">
-        <div className="text-5xl text-glow-ember">{icon}</div>
+      <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-7 pointer-events-none">
+        <div className="text-3xl sm:text-4xl md:text-5xl text-glow-ember">{icon}</div>
         <div>
-          <div className="label-mono text-ember mb-3">// service</div>
-          <h3 className="text-3xl font-bold leading-none mb-3">{title}</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+          <div className="label-mono text-ember mb-2">// service</div>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold leading-none mb-2">{title}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{desc}</p>
         </div>
       </div>
     </div>
